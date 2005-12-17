@@ -18,7 +18,7 @@ Lesser General Public License (in the LICENSE file) for more details.
 (function(){
 
 var NAME = "JSModule";
-var VERSION = "0.1.0";
+var VERSION = "0.11";
 var MEMBERS = [
     "addIncludePath",
     "include",
@@ -114,10 +114,17 @@ var include = function(moduleName /*, name, ... */) {
                 names = names.concat(module.MEMBERS);
             } else if(name.charAt(0) == ":") {
                 var groupNames = module.MEMBERGROUPS[name.slice(1)];
-                if(groupNames)
+                if(typeof(groupNames) != "undefined")
                     names = names.concat(groupNames);
+                else
+                    throw new Error("Group '" + name.slice(1) + "' not found in module '"
+                        + moduleName + "'");
             } else {
-                names.push(name);
+                if(typeof(module[name]) != "undefined")
+                    names.push(name);
+                else
+                    throw new Error("Name '" + name + "' not found in module '"
+                        + moduleName + "'");
             }
         }
         var valuesToInject = {};
@@ -171,7 +178,7 @@ var reload = function(moduleName) {
             moduleObject = eval(moduleWrapper);
         } catch(e) {
             throw new Error("Exception in module '" + moduleName
-                + "': " + e.message);
+                + "': " + (e.message || e.toString()));
         }
 
         // Save the loaded module
@@ -221,7 +228,7 @@ var reload = function(moduleName) {
     }
 
     // The module could not be loaded
-    return null;
+    throw new Error("JSModule could not locate module 'moduleName'");
 };
 
 /// Add the given paths to the list of include paths, if not present,

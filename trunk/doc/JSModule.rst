@@ -2,7 +2,7 @@
 JSModule - Javascript Module Loader
 ===================================
 
-JSModule Version 0.1.0
+JSModule Version 0.11
 
 Written by `Andrew Durdin`_
 
@@ -79,7 +79,7 @@ Member groups
     module all at once.
 
 Small size
-    JSModule is a very small download: less than 8kB when unpacked, and
+    JSModule is a small download: less than 8kB when unpacked, and
     only 2.5kB when packed.
 
 
@@ -170,6 +170,10 @@ You can also use include_ to include JSAN_ modules and inject its
 members or member groups (export tags).  Note that unlike JSAN,
 JSModule will not inject any module members by default.
 
+If a module cannot be found, or a name or group name is included which
+does not exist in the module's MEMBERS or MEMBERGROUPS lists, an exception
+will be thrown.
+
 
 Writing Modules
 ---------------
@@ -244,7 +248,7 @@ JSModule has been successfully tested with the following browsers:
 You can run the `test suite`_ yourself to test its compatiblity with
 your browser.
 
-..  _`test suite`: ./tests/test_JSModule.html
+..  _`test suite`: ./tests/index.html
 
 ..  [1]  Opera 8.5 hangs the script when using XMLHttpRequest
          to request a non-existent file at a relative URL from a local
@@ -299,8 +303,9 @@ corresponding member group in the module will be injected.  For
 example, ``include("Foo", ":utils")`` will inject the names from the
 "utils" member group.
 
-If a *name* is not as above, and not in the ``MEMBERS`` attribute, it
-will be ignored.
+If a *name* is not found in the ``MEMBERS`` attribute, or a group
+name is not found in the ``MEMBERGROUPS`` attribute, an exception
+will be thrown.
 
 The script will look in each path in includePaths_ for a file named
 ``moduleName.js``. If *moduleName* is a dotted name, then the
@@ -308,7 +313,7 @@ components between dots will be converted to directory names. For
 example, with the module name ``Foo.Bar``, the file ``Bar.js`` will be
 looked for in the ``Foo/`` subdirectory of each of the include paths.
 
-If the module cannot be found, ``null`` will be returned.
+If the module cannot be found, an exception will be thrown.
 
 If the module has already been included in the context of the script, a
 second call to include_ will not load it again, but will return the

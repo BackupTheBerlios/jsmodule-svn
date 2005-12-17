@@ -1,0 +1,16 @@
+﻿--- #YAML:1.0
+name: JSModule
+version: 0.11
+author:
+  - Andrew Durdin <andy@durdin.net>
+abstract: Javascript module loader with an emphasis on making modules as easy as possible to use and to write.
+provides:
+  JSModule:
+    file: lib/JSModule.js
+    version: 0.11
+build-requires:
+  Test.Simple: 0.21
+license: lgpl
+resources:
+  homepage: http://developer.berlios.de/projects/jsmodule/
+  bugtracker: http://developer.berlios.de/bugs/?group_id=5439

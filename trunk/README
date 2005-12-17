@@ -1,9 +1,10 @@
-JSModule version 0.1.0
+JSModule version 0.11
 ======================
 
 Browser-based-Javascript library and module loader.
 
 Copyright (c) 2005 Andrew Durdin. <andy@durdin.net>
+
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -19,13 +20,26 @@ Lesser General Public License (in the LICENSE file) for more details.
 Important Files and Directories
 -------------------------------
 
-LICENSE     License information for usage and distribution.
-NEWS        Version history.
-README      This file.
-doc/        Contains documentation in ReST and HTML formats.
-src/        Contains source for all library files.
-lib/        Contains compressed library files.
-tests/      Contains tests for the library.
+LICENSE
+    License information for usage and distribution.
+    
+NEWS
+    Version history.
+    
+README
+    This file.
+    
+doc/
+    Contains documentation in ReST and HTML formats.
+    
+src/
+    Contains source for all library files.
+    
+lib/
+    Contains compressed library files.
+    
+tests/
+    Contains tests for the library.
 
 
 Installing JSModule
