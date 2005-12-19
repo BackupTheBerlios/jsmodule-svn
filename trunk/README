@@ -29,6 +29,9 @@ NEWS
 README
     This file.
     
+META.yml
+    Packaging details for OpenJSAN.
+
 doc/
     Contains documentation in ReST and HTML formats.
     

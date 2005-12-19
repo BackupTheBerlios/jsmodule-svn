@@ -288,7 +288,7 @@ ul.auto-toc {
 <body>
 <div class="document" id="jsmodule-javascript-module-loader">
 <h1 class="title">JSModule - Javascript Module Loader</h1>
-<p>JSModule Version 0.1.0</p>
+<p>JSModule Version 0.11</p>
 <p>Written by <a class="reference" href="mailto:andy&#64;durdin.net">Andrew Durdin</a></p>
 <div class="section">
 <h1><a id="contents" name="contents">Contents</a></h1>
@@ -350,7 +350,7 @@ exported names and tags from JSAN modules.</dd>
 <dd>JSModule support groups of members that can be injected from a
 module all at once.</dd>
 <dt>Small size</dt>
-<dd>JSModule is a very small download: less than 8kB when unpacked, and
+<dd>JSModule is a small download: less than 8kB when unpacked, and
 only 2.5kB when packed.</dd>
 </dl>
 </div>
@@ -433,6 +433,9 @@ alert(bar == 99);               =&gt; 'false'
 <p>You can also use <a class="reference" href="#include">include</a> to include <a class="reference" href="http://www.openjsan.org/go?l=JSAN">JSAN</a> modules and inject its
 members or member groups (export tags).  Note that unlike JSAN,
 JSModule will not inject any module members by default.</p>
+<p>If a module cannot be found, or a name or group name is included which
+does not exist in the module's MEMBERS or MEMBERGROUPS lists, an exception
+will be thrown.</p>
 </div>
 <div class="section">
 <h1><a id="writing-modules" name="writing-modules">Writing Modules</a></h1>
@@ -500,7 +503,7 @@ member group such as this one.</p>
 <li>Opera 8.5 (Mac OS X 10.4) <a class="footnote-reference" href="#id2" id="id1" name="id1">[1]</a></li>
 <li>Opera 9.0 preview 1 (Max OS X 10.4)</li>
 </ul>
-<p>You can run the <a class="reference" href="./tests/test_JSModule.html">test suite</a> yourself to test its compatiblity with
+<p>You can run the <a class="reference" href="./tests/index.html">test suite</a> yourself to test its compatiblity with
 your browser.</p>
 <table class="docutils footnote" frame="void" id="id2" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
@@ -549,14 +552,15 @@ all <em>names</em> into the global namespace, returning the module object.</p>
 corresponding member group in the module will be injected.  For
 example, <tt class="docutils literal"><span class="pre">include(&quot;Foo&quot;,</span> <span class="pre">&quot;:utils&quot;)</span></tt> will inject the names from the
 &quot;utils&quot; member group.</p>
-<p>If a <em>name</em> is not as above, and not in the <tt class="docutils literal"><span class="pre">MEMBERS</span></tt> attribute, it
-will be ignored.</p>
+<p>If a <em>name</em> is not found in the <tt class="docutils literal"><span class="pre">MEMBERS</span></tt> attribute, or a group
+name is not found in the <tt class="docutils literal"><span class="pre">MEMBERGROUPS</span></tt> attribute, an exception
+will be thrown.</p>
 <p>The script will look in each path in <a class="reference" href="#includepaths">includePaths</a> for a file named
 <tt class="docutils literal"><span class="pre">moduleName.js</span></tt>. If <em>moduleName</em> is a dotted name, then the
 components between dots will be converted to directory names. For
 example, with the module name <tt class="docutils literal"><span class="pre">Foo.Bar</span></tt>, the file <tt class="docutils literal"><span class="pre">Bar.js</span></tt> will be
 looked for in the <tt class="docutils literal"><span class="pre">Foo/</span></tt> subdirectory of each of the include paths.</p>
-<p>If the module cannot be found, <tt class="docutils literal"><span class="pre">null</span></tt> will be returned.</p>
+<p>If the module cannot be found, an exception will be thrown.</p>
 <p>If the module has already been included in the context of the script, a
 second call to <a class="reference" href="#include">include</a> will not load it again, but will return the
 existing module.</p>
