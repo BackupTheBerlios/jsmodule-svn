@@ -1,0 +1,640 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.3.10: http://docutils.sourceforge.net/" />
+<title>JSModule - Javascript Module Loader</title>
+<style type="text/css">
+
+/*
+:Author: David Goodger
+:Contact: goodger@users.sourceforge.net
+:Date: $Date: 2005-11-20 22:17:24 +0100 (Sun, 20 Nov 2005) $
+:Revision: $Revision: 4090 $
+:Copyright: This stylesheet has been placed in the public domain.
+
+Default cascading style sheet for the HTML output of Docutils.
+
+See http://docutils.sf.net/docs/howto/html-stylesheets.html for how to
+customize this style sheet.
+*/
+
+/* "! important" is used here to override other ``margin-top`` and
+   ``margin-bottom`` styles that are later in the stylesheet or 
+   more specific.  See http://www.w3.org/TR/CSS1#the-cascade */
+.first {
+  margin-top: 0 ! important }
+
+.last, .with-subtitle {
+  margin-bottom: 0 ! important }
+
+.hidden {
+  display: none }
+
+a.toc-backref {
+  text-decoration: none ;
+  color: black }
+
+blockquote.epigraph {
+  margin: 2em 5em ; }
+
+dl.docutils dd {
+  margin-bottom: 0.5em }
+
+/* Uncomment (and remove this text!) to get bold-faced definition list terms
+dl.docutils dt {
+  font-weight: bold }
+*/
+
+div.abstract {
+  margin: 2em 5em }
+
+div.abstract p.topic-title {
+  font-weight: bold ;
+  text-align: center }
+
+div.admonition, div.attention, div.caution, div.danger, div.error,
+div.hint, div.important, div.note, div.tip, div.warning {
+  margin: 2em ;
+  border: medium outset ;
+  padding: 1em }
+
+div.admonition p.admonition-title, div.hint p.admonition-title,
+div.important p.admonition-title, div.note p.admonition-title,
+div.tip p.admonition-title {
+  font-weight: bold ;
+  font-family: sans-serif }
+
+div.attention p.admonition-title, div.caution p.admonition-title,
+div.danger p.admonition-title, div.error p.admonition-title,
+div.warning p.admonition-title {
+  color: red ;
+  font-weight: bold ;
+  font-family: sans-serif }
+
+/* Uncomment (and remove this text!) to get reduced vertical space in
+   compound paragraphs.
+div.compound .compound-first, div.compound .compound-middle {
+  margin-bottom: 0.5em }
+
+div.compound .compound-last, div.compound .compound-middle {
+  margin-top: 0.5em }
+*/
+
+div.dedication {
+  margin: 2em 5em ;
+  text-align: center ;
+  font-style: italic }
+
+div.dedication p.topic-title {
+  font-weight: bold ;
+  font-style: normal }
+
+div.figure {
+  margin-left: 2em ;
+  margin-right: 2em }
+
+div.footer, div.header {
+  clear: both;
+  font-size: smaller }
+
+div.line-block {
+  display: block ;
+  margin-top: 1em ;
+  margin-bottom: 1em }
+
+div.line-block div.line-block {
+  margin-top: 0 ;
+  margin-bottom: 0 ;
+  margin-left: 1.5em }
+
+div.sidebar {
+  margin-left: 1em ;
+  border: medium outset ;
+  padding: 1em ;
+  background-color: #ffffee ;
+  width: 40% ;
+  float: right ;
+  clear: right }
+
+div.sidebar p.rubric {
+  font-family: sans-serif ;
+  font-size: medium }
+
+div.system-messages {
+  margin: 5em }
+
+div.system-messages h1 {
+  color: red }
+
+div.system-message {
+  border: medium outset ;
+  padding: 1em }
+
+div.system-message p.system-message-title {
+  color: red ;
+  font-weight: bold }
+
+div.topic {
+  margin: 2em }
+
+h1.section-subtitle, h2.section-subtitle, h3.section-subtitle,
+h4.section-subtitle, h5.section-subtitle, h6.section-subtitle {
+  margin-top: 0.4em }
+
+h1.title {
+  text-align: center }
+
+h2.subtitle {
+  text-align: center }
+
+hr.docutils {
+  width: 75% }
+
+img.align-left {
+  clear: left }
+
+img.align-right {
+  clear: right }
+
+img.borderless {
+  border: 0 }
+
+ol.simple, ul.simple {
+  margin-bottom: 1em }
+
+ol.arabic {
+  list-style: decimal }
+
+ol.loweralpha {
+  list-style: lower-alpha }
+
+ol.upperalpha {
+  list-style: upper-alpha }
+
+ol.lowerroman {
+  list-style: lower-roman }
+
+ol.upperroman {
+  list-style: upper-roman }
+
+p.attribution {
+  text-align: right ;
+  margin-left: 50% }
+
+p.caption {
+  font-style: italic }
+
+p.credits {
+  font-style: italic ;
+  font-size: smaller }
+
+p.label {
+  white-space: nowrap }
+
+p.rubric {
+  font-weight: bold ;
+  font-size: larger ;
+  color: maroon ;
+  text-align: center }
+
+p.sidebar-title {
+  font-family: sans-serif ;
+  font-weight: bold ;
+  font-size: larger }
+
+p.sidebar-subtitle {
+  font-family: sans-serif ;
+  font-weight: bold }
+
+p.topic-title {
+  font-weight: bold }
+
+pre.address {
+  margin-bottom: 0 ;
+  margin-top: 0 ;
+  font-family: serif ;
+  font-size: 100% }
+
+pre.literal-block, pre.doctest-block {
+  margin-left: 2em ;
+  margin-right: 2em ;
+  background-color: #eeeeee }
+
+span.classifier {
+  font-family: sans-serif ;
+  font-style: oblique }
+
+span.classifier-delimiter {
+  font-family: sans-serif ;
+  font-weight: bold }
+
+span.interpreted {
+  font-family: sans-serif }
+
+span.option {
+  white-space: nowrap }
+
+span.pre {
+  white-space: pre }
+
+span.problematic {
+  color: red }
+
+span.section-subtitle {
+  /* font-size relative to parent (h1..h6 element) */
+  font-size: 80% }
+
+table.citation {
+  border-left: solid 1px gray;
+  margin-left: 1px }
+
+table.docinfo {
+  margin: 2em 4em }
+
+table.docutils {
+  margin-top: 0.5em ;
+  margin-bottom: 0.5em }
+
+table.footnote {
+  border-left: solid 1px black;
+  margin-left: 1px }
+
+table.docutils td, table.docutils th,
+table.docinfo td, table.docinfo th {
+  padding-left: 0.5em ;
+  padding-right: 0.5em ;
+  vertical-align: top }
+
+table.docutils th.field-name, table.docinfo th.docinfo-name {
+  font-weight: bold ;
+  text-align: left ;
+  white-space: nowrap ;
+  padding-left: 0 }
+
+h1 tt.docutils, h2 tt.docutils, h3 tt.docutils,
+h4 tt.docutils, h5 tt.docutils, h6 tt.docutils {
+  font-size: 100% }
+
+tt.docutils {
+  background-color: #eeeeee }
+
+ul.auto-toc {
+  list-style-type: none }
+
+</style>
+</head>
+<body>
+<div class="document" id="jsmodule-javascript-module-loader">
+<h1 class="title">JSModule - Javascript Module Loader</h1>
+<p>JSModule Version 0.11</p>
+<p>Written by <a class="reference" href="mailto:andy&#64;durdin.net">Andrew Durdin</a></p>
+<div class="section">
+<h1><a id="contents" name="contents">Contents</a></h1>
+<ol class="arabic simple">
+<li><a class="reference" href="#overview">Overview</a></li>
+<li><a class="reference" href="#sample-usage">Sample Usage</a></li>
+<li><a class="reference" href="#features">Features</a></li>
+<li><a class="reference" href="#including-modules">Including Modules</a></li>
+<li><a class="reference" href="#writing-modules">Writing Modules</a></li>
+<li><a class="reference" href="#compatibility">Compatibility</a></li>
+<li><a class="reference" href="#reference">Reference</a></li>
+<li><a class="reference" href="#copyright">Copyright</a></li>
+</ol>
+</div>
+<div class="section">
+<h1><a id="overview" name="overview">Overview</a></h1>
+<p><a class="reference" href="http://andy.durdin.net/packages/JSModule/">JSModule</a> is a module loader for Javascript.  It allows javascript
+developers to split large scripts into separate modules, enabling code
+reuse and enhancing maintainability.</p>
+</div>
+<div class="section">
+<h1><a id="sample-usage" name="sample-usage">Sample Usage</a></h1>
+<pre class="literal-block">
+&lt;script type='text/javascript' src='JSModule.js'&gt;&lt;/script&gt;
+&lt;script type='text/javascript'&gt;
+
+    // Load the &quot;Event&quot; module, injecting the members &quot;addEvent&quot;
+    // and &quot;removeEvent&quot; as globals
+    include(&quot;Event&quot;, &quot;addEvent&quot;, &quot;removeEvent&quot;);
+
+    // Load the &quot;Animation&quot; module, inject the &quot;default&quot; set of
+    // members as globals
+    include(&quot;Animation&quot;, &quot;:default&quot;);
+
+&lt;/script&gt;
+</pre>
+</div>
+<div class="section">
+<h1><a id="features" name="features">Features</a></h1>
+<p>JSModule has the following features:</p>
+<dl class="docutils">
+<dt>Private module-level scope</dt>
+<dd>All functions and variables declared in a module are completely
+private to that module, unless explicitly exported.</dd>
+<dt>Dependency handling</dt>
+<dd>Modules can call <a class="reference" href="#include">include</a> to manage their own dependencies, and
+these dependencies will be loaded also, with appropriate caching.
+This removes the need for the module user to determine and include
+dependencies for the modules he uses.</dd>
+<dt>Minimal boilerplate</dt>
+<dd>Modules need an absolute minimum of boilerplate code to work with
+JSModule, unlike other module loaders.  This keeps the modules
+readable and makes <a class="reference" href="#writing-modules">writing modules</a> easier.</dd>
+<dt>Backward compatibility</dt>
+<dd>JSModule is compatible with modules written with explicit namespace
+construction, such as those used with <a class="reference" href="http://www.openjsan.org/go?l=JSAN">JSAN</a>.  It will recognise the
+exported names and tags from JSAN modules.</dd>
+<dt>Member groups</dt>
+<dd>JSModule support groups of members that can be injected from a
+module all at once.</dd>
+<dt>Small size</dt>
+<dd>JSModule is a small download: less than 8kB when unpacked, and
+only 2.5kB when packed.</dd>
+</dl>
+</div>
+<div class="section">
+<h1><a id="including-modules" name="including-modules">Including Modules</a></h1>
+<p>Including a module with JSModule causes several things to happen:</p>
+<ol class="arabic simple">
+<li>The module file is located and executed if it has not been included
+already.</li>
+<li>The module name is injected into the global namespace.</li>
+<li>Members of the module are injected into the global namespace as
+requested.</li>
+</ol>
+<p>The filename of the module is determined from the module name by
+converting all package names to directories, and appending &quot;.js&quot;:</p>
+<pre class="literal-block">
+include(&quot;Foo&quot;);         =&gt; &quot;Foo.js&quot;
+include(&quot;Foo.Bar&quot;);     =&gt; &quot;Foo/Bar.js&quot;
+include(&quot;Foo.Bar.Baz&quot;); =&gt; &quot;Foo/Bar/Baz.js&quot;
+</pre>
+<p>The paths in <a class="reference" href="#includepaths">includePaths</a> will then be searched for the module file.
+The default include path is &quot;&quot;, the local directory.  Users can use the
+<a class="reference" href="#addincludepath">addIncludePath</a> function to add one or more paths to search:</p>
+<pre class="literal-block">
+addIncludePath(&quot;/lib/js&quot;);
+include(&quot;Foo.Bar&quot;);     =&gt; searches for &quot;Foo/Bar.js&quot;
+                           and &quot;/lib/js/Foo/Bar.js&quot;
+</pre>
+<p>After loading, the module name will be injected into the global
+namespace exactly as it was passed to the <a class="reference" href="#include">include</a> function, complete
+with any package names.  If an object corresponding to a package name
+does not exists, it will be created:</p>
+<pre class="literal-block">
+include(&quot;Foo.Bar&quot;);         =&gt; 'Foo' is now an object with one
+                               attribute 'Bar'
+include(&quot;Foo.Baz&quot;);         =&gt; Adds the attribute 'Baz' to 'Foo'
+include(&quot;Qux&quot;);             =&gt; 'Qux' is now an object.
+</pre>
+<p>If an object corresponding to the module name already exists, it will
+not be replaced. This is to preserve compatibility with javascript
+modules not written for use with JSModule:</p>
+<pre class="literal-block">
+include(&quot;MochiKit.Base&quot;);   =&gt; MochiKit.Base internally declares 'MochiKit'
+                               and 'MochiKit.Base' as globals, so JSModule
+                               leaves these as-is.
+</pre>
+<p>If the <a class="reference" href="#include">include</a> call specifies the names of members, these are injected
+into the global namespace:</p>
+<pre class="literal-block">
+include(&quot;Foo&quot;, &quot;bar&quot;, &quot;baz&quot;);   =&gt; 'bar' and 'baz' are now globals
+bar();                          =&gt; equivalent to 'Foo.bar()'
+alert(baz);                     =&gt; equivalent to 'alert(Foo.baz)'
+</pre>
+<p>If the module declares member groups, the members of these groups can
+be injected without having to enumerate each member manually:</p>
+<pre class="literal-block">
+// The Foo module has a member group named 'utils' with the names
+// 'bar' and 'baz'.
+
+include(&quot;Foo&quot;, &quot;:utils&quot;);       =&gt; 'bar' and 'baz' are now globals
+</pre>
+<p>Member groups and individual members can be injected together in a
+single call:</p>
+<pre class="literal-block">
+include(&quot;Foo&quot;, &quot;:utils&quot;, &quot;qux&quot;);
+</pre>
+<p>The user can also inject all the members of a module at once, but this
+is not generally recommended, in case some of the names conflict with
+user-declared names:</p>
+<pre class="literal-block">
+include(&quot;Foo&quot;, &quot;*&quot;);            =&gt; all members of Foo are now globals
+</pre>
+<p>In all cases, if a global name already exists, it will be replaced if
+it is injected:</p>
+<pre class="literal-block">
+bar = 99;
+include(&quot;Foo&quot;, &quot;bar&quot;);
+alert(bar == 99);               =&gt; 'false'
+</pre>
+<p>You can also use <a class="reference" href="#include">include</a> to include <a class="reference" href="http://www.openjsan.org/go?l=JSAN">JSAN</a> modules and inject its
+members or member groups (export tags).  Note that unlike JSAN,
+JSModule will not inject any module members by default.</p>
+<p>If a module cannot be found, or a name or group name is included which
+does not exist in the module's MEMBERS or MEMBERGROUPS lists, an exception
+will be thrown.</p>
+</div>
+<div class="section">
+<h1><a id="writing-modules" name="writing-modules">Writing Modules</a></h1>
+<p>Although JSModule is capable of loading many existing Javascript
+modules, it can provide additional benefits for modules written to suit
+it: it is simpler to write modules for JSModule than for JSAN or Dojo,
+and JSModule modules have a private namespace so they do not interfere
+with each other.  There are only two requirements for a module:</p>
+<dl class="docutils">
+<dt>Functions and variables should be declared as locals</dt>
+<dd>Declaring functions and variables as globals (e.g.
+<tt class="docutils literal"><span class="pre">myVariable</span> <span class="pre">=</span> <span class="pre">[]</span></tt>) causes pollution of the global namespace, and
+poses a risk that two libraries could interfere with each other if
+they use the same name.  Declaring functions and variables as
+locals with the <tt class="docutils literal"><span class="pre">var</span></tt> keyword (e.g. <tt class="docutils literal"><span class="pre">var</span> <span class="pre">myVariable</span> <span class="pre">=</span> <span class="pre">[]</span></tt>)
+prevents this problem.</dd>
+<dt>The module's public members must be declared</dt>
+<dd><p class="first">The module must declare a local <tt class="docutils literal"><span class="pre">MEMBERS</span></tt> variable as an array of
+the function and variable names that should be publically visible:</p>
+<pre class="literal-block">
+// Foo module
+var bar = {};
+var baz = {};
+var qux = {}
+
+var MEMBERS = [
+    &quot;bar&quot;,
+    &quot;baz&quot;,
+];
+</pre>
+<p>JSModule will make all these names attributes of the module object
+when it is loaded.  After loading the example module above,
+<tt class="docutils literal"><span class="pre">Foo.bar</span></tt> and <tt class="docutils literal"><span class="pre">Foo.baz`</span> <span class="pre">refer</span> <span class="pre">to</span> <span class="pre">the</span> <span class="pre">module's</span> <span class="pre">``bar</span></tt> and
+<tt class="docutils literal"><span class="pre">baz</span></tt> variables, but <tt class="docutils literal"><span class="pre">Foo.qux</span></tt> is undefined, because <tt class="docutils literal"><span class="pre">qux</span></tt> is
+private.</p>
+<p class="last">All the functions and variables declared as locals in the module
+and not listed in the <tt class="docutils literal"><span class="pre">MEMBERS</span></tt> array will be private to the
+module, with the exception of the special variables <tt class="docutils literal"><span class="pre">NAME</span></tt>,
+<tt class="docutils literal"><span class="pre">VERSION</span></tt>, <tt class="docutils literal"><span class="pre">MEMBERS</span></tt>, and <tt class="docutils literal"><span class="pre">MEMBERGROUPS</span></tt> -- these will also
+be public attributes of the module object.</p>
+</dd>
+</dl>
+<p>A module writer can also (but is not required to) declare a local
+<tt class="docutils literal"><span class="pre">MEMBERGROUPS</span></tt> variable.  This is a dictionary containing a list of
+group-name and array pairs, which allow groups of functions to be
+injected using just the group name:</p>
+<pre class="literal-block">
+// still in the Foo module from the last example
+
+var MEMBERGROUPS = {
+    &quot;utils&quot;: [&quot;bar&quot;, &quot;baz&quot;]
+};
+</pre>
+<p>See <a class="reference" href="#including-modules">Including Modules</a> for an example of injecting the names from a
+member group such as this one.</p>
+</div>
+<div class="section">
+<h1><a id="compatibility" name="compatibility">Compatibility</a></h1>
+<p>JSModule has been successfully tested with the following browsers:</p>
+<ul class="simple">
+<li>Internet Explorer 6.0 (Windows XP SP2)</li>
+<li>Firefox 1.0 (Windows XP SP2, Mac OS X 10.4)</li>
+<li>Firefox 1.5 RC3 (Mac OS X 10.4)</li>
+<li>Safari 2.0 (Mac OS X 10.4)</li>
+<li>Opera 8.5 (Mac OS X 10.4) <a class="footnote-reference" href="#id2" id="id1" name="id1">[1]</a></li>
+<li>Opera 9.0 preview 1 (Max OS X 10.4)</li>
+</ul>
+<p>You can run the <a class="reference" href="./tests/index.html">test suite</a> yourself to test its compatiblity with
+your browser.</p>
+<table class="docutils footnote" frame="void" id="id2" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1" name="id2">[1]</a></td><td>Opera 8.5 hangs the script when using XMLHttpRequest
+to request a non-existent file at a relative URL from a local
+(<tt class="docutils literal"><span class="pre">file://</span></tt>) html file; however it passes the tests for
+internet (<tt class="docutils literal"><span class="pre">http://</span></tt>) pages.</td></tr>
+</tbody>
+</table>
+</div>
+<div class="section">
+<h1><a id="reference" name="reference">Reference</a></h1>
+<p>Here is a brief reference of the public members of the JSModule module:</p>
+<dl class="docutils">
+<dt>Functions</dt>
+<dd><a class="reference" href="#addincludepath">addIncludePath</a>, <a class="reference" href="#include">include</a>, <a class="reference" href="#inject">inject</a>, <a class="reference" href="#reload">reload</a></dd>
+<dt>Variables</dt>
+<dd><a class="reference" href="#globalnamespace">globalNamespace</a>, <a class="reference" href="#includepaths">includePaths</a>, <a class="reference" href="#loadedmodules">loadedModules</a></dd>
+</dl>
+<div class="section">
+<h2><a id="addincludepath" name="addincludepath">addIncludePath</a></h2>
+<pre class="literal-block">
+addIncludePath(&quot;path&quot; [, &quot;path&quot;, ...]);
+</pre>
+<p>Adds the <em>paths</em> to the end of the <a class="reference" href="#includepaths">includePaths</a> list (if they are not
+already in it).  The given paths will have a slash appended if
+necessary.</p>
+<p><tt class="docutils literal"><span class="pre">addIncludePath</span></tt> is injected into the global namespace automatically.</p>
+</div>
+<div class="section">
+<h2><a id="globalnamespace" name="globalnamespace">globalNamespace</a></h2>
+<p>Provides a reference to the global namespace, to allow other modules to
+manipulate entries in it.</p>
+</div>
+<div class="section">
+<h2><a id="include" name="include">include</a></h2>
+<pre class="literal-block">
+include(&quot;moduleName&quot; [, &quot;name&quot;, &quot;name&quot;, ...]);
+</pre>
+<p>Locates and loads the module <em>moduleName</em>, injecting <em>moduleName</em> and
+all <em>names</em> into the global namespace, returning the module object.</p>
+<p>If a <em>name</em> is <tt class="docutils literal"><span class="pre">*</span></tt>, then all the names declared in the module's
+<tt class="docutils literal"><span class="pre">MEMBERS</span></tt> attribute will be injected.</p>
+<p>If a <em>name</em> begins with a colon <tt class="docutils literal"><span class="pre">:</span></tt>, then the names from the
+corresponding member group in the module will be injected.  For
+example, <tt class="docutils literal"><span class="pre">include(&quot;Foo&quot;,</span> <span class="pre">&quot;:utils&quot;)</span></tt> will inject the names from the
+&quot;utils&quot; member group.</p>
+<p>If a <em>name</em> is not found in the <tt class="docutils literal"><span class="pre">MEMBERS</span></tt> attribute, or a group
+name is not found in the <tt class="docutils literal"><span class="pre">MEMBERGROUPS</span></tt> attribute, an exception
+will be thrown.</p>
+<p>The script will look in each path in <a class="reference" href="#includepaths">includePaths</a> for a file named
+<tt class="docutils literal"><span class="pre">moduleName.js</span></tt>. If <em>moduleName</em> is a dotted name, then the
+components between dots will be converted to directory names. For
+example, with the module name <tt class="docutils literal"><span class="pre">Foo.Bar</span></tt>, the file <tt class="docutils literal"><span class="pre">Bar.js</span></tt> will be
+looked for in the <tt class="docutils literal"><span class="pre">Foo/</span></tt> subdirectory of each of the include paths.</p>
+<p>If the module cannot be found, an exception will be thrown.</p>
+<p>If the module has already been included in the context of the script, a
+second call to <a class="reference" href="#include">include</a> will not load it again, but will return the
+existing module.</p>
+<p>The module returned from the function will have attributes set for all
+the names in the module's <tt class="docutils literal"><span class="pre">MEMBERS</span></tt> list, as well as attributes for
+any of the variables <tt class="docutils literal"><span class="pre">NAME</span></tt>, <tt class="docutils literal"><span class="pre">VERSION</span></tt>, <tt class="docutils literal"><span class="pre">MEMBERS</span></tt>, and
+<tt class="docutils literal"><span class="pre">MEMBERGROUPS</span></tt> that are declared in the module.</p>
+<p>If the module is a JSAN module, then its <tt class="docutils literal"><span class="pre">MEMBERS</span></tt> list will consist
+of the the names in its <tt class="docutils literal"><span class="pre">EXPORT</span></tt> and <tt class="docutils literal"><span class="pre">EXPORT_OK</span></tt> lists; while its
+<tt class="docutils literal"><span class="pre">MEMBERGROUPS</span></tt> dictionary will contain the groups listed in its
+<tt class="docutils literal"><span class="pre">EXPORT_TAGS</span></tt> dictionary, if defined.</p>
+<p><tt class="docutils literal"><span class="pre">include</span></tt> is injected into the global namespace automatically.</p>
+</div>
+<div class="section">
+<h2><a id="includepaths" name="includepaths">includePaths</a></h2>
+<p>An array of paths where <a class="reference" href="#include">include</a> and <a class="reference" href="#reload">reload</a> will search for modules.
+Each entry must be an absolute or relative path from the current
+location, with a trailing slash.</p>
+<p>The <a class="reference" href="#addincludepath">addIncludePath</a> function should normally be used to add a path to
+this list.</p>
+</div>
+<div class="section">
+<h2><a id="inject" name="inject">inject</a></h2>
+<pre class="literal-block">
+inject(valuesToInject [, namespace]);
+</pre>
+<p>Injects the name-value pairs from the dictionary <em>valuesToInject</em> into
+the <em>namespace</em> object.  If a name in <em>valuesToInject</em> is a dotted
+name, then an object hierarchy corresponding to the dotted parts of the
+name will be created if it doesn't exist:</p>
+<pre class="literal-block">
+inject( { &quot;Foo.Bar.baz&quot;: &quot;qux&quot; } );    =&gt; Creates 'Foo' and
+                                          'Foo.Bar' objects if they
+                                          don't exist, and sets
+                                          'Foo.Bar.baz' to &quot;qux&quot;.
+</pre>
+<p>If <em>namespace</em> is not given, then the global namespace will be used.</p>
+</div>
+<div class="section">
+<h2><a id="loadedmodules" name="loadedmodules">loadedModules</a></h2>
+<p>A dictionary of modules that have been loaded. Modules can be accessed
+by name from this dictionary if their global namespace entry has been
+clobbered:</p>
+<pre class="literal-block">
+include(&quot;Foo.Bar&quot;);
+Foo.Bar = null;
+JSModule.loadedModules[&quot;Foo.Bar&quot;]   =&gt; Points to the Foo.Bar module
+                                       loaded by include()
+</pre>
+</div>
+<div class="section">
+<h2><a id="reload" name="reload">reload</a></h2>
+<pre class="literal-block">
+reload(moduleName);
+</pre>
+<p>Locates and runs the module <em>moduleName</em> as per <a class="reference" href="#include">include</a>, but forces
+the module to be re-evaluated.  Any members of the module that have
+been injected into the global namespace will not updated unless
+<a class="reference" href="#include">include</a> is called again.</p>
+<p>Note that the <tt class="docutils literal"><span class="pre">JSModule</span></tt> module will never be reloaded.</p>
+</div>
+</div>
+<div class="section">
+<h1><a id="copyright" name="copyright">Copyright</a></h1>
+<p>Coypright (c) 2005 Andrew Durdin. &lt;<a class="reference" href="mailto:andy&#64;durdin.net">andy&#64;durdin.net</a>&gt;</p>
+<p>This library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Lesser General Public
+License as published by the Free Software Foundation; either
+version 2.1 of the License, or (at your option) any later version.</p>
+<p>This library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License (in the LICENSE file) for more details.</p>
+</div>
+</div>
+</body>
+</html>

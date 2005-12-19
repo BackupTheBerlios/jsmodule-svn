@@ -1,0 +1,64 @@
+JSModule version 0.11
+======================
+
+Browser-based-Javascript library and module loader.
+
+Copyright (c) 2005 Andrew Durdin. <andy@durdin.net>
+
+
+This library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Lesser General Public
+License as published by the Free Software Foundation; either
+version 2.1 of the License, or (at your option) any later version.
+
+This library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License (in the LICENSE file) for more details.
+
+
+Important Files and Directories
+-------------------------------
+
+LICENSE
+    License information for usage and distribution.
+    
+NEWS
+    Version history.
+    
+README
+    This file.
+    
+META.yml
+    Packaging details for OpenJSAN.
+
+doc/
+    Contains documentation in ReST and HTML formats.
+    
+src/
+    Contains source for all library files.
+    
+lib/
+    Contains compressed library files.
+    
+tests/
+    Contains tests for the library.
+
+
+Installing JSModule
+-------------------
+
+Since JSModule is meant to be used in a web server environment, you
+must copy or link the file lib/JSModule.js to an appropriate
+directory in your web server's document root.
+
+
+Where to go from here?
+----------------------
+
+The documentation is probably a good place to start. Have a look
+at doc/JSModule.html for instructions on using the library.
+
+The project page at http://developer.berlios.de/projects/jsmodule/
+has the source code repository, bug tracker, mailing lists, and
+other information for the site.

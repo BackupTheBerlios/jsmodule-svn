@@ -1,0 +1,104 @@
+<html>
+  <head>
+    <script type="text/javascript" src="../src/JSModule.js"></script>
+    <script type="text/javascript" src="lib/Test/Builder.js"></script>
+    <script type="text/javascript" src="lib/Test/More.js"></script>
+  </head>
+  <body>
+    <pre id="test">
+      <script type="text/javascript">
+        var defined = function(name) {
+            // See if name is defined
+            try {
+                if(typeof(eval(name)) == "undefined")
+                    return false;
+            } catch(e) {
+                return false;
+            }
+            return true;
+        };
+
+        // Plan for the number of tests we have
+        plan({tests: 13});
+        
+
+        // Test that a bare import works
+        include("SampleModule");
+        ok(defined("SampleModule"),
+            "importing module, bare");
+    
+        // Make sure private members aren't imported
+        ok(!defined("SampleModule.privateConstant"),
+            "module object does not contain private members");
+    
+        // Make sure public members are imported
+        ok(defined("SampleModule.someFunction") && defined("SampleModule.anotherFunction"),
+            "module object contains public members");
+
+        // Test importing a nonexistent name from SampleModule
+        try {
+            include("SampleModule", "nonexistentFunction");
+            fail("importing nonexistent name throws exception");
+        } catch(e) {
+            pass("importing nonexistent name throws exception");
+        }
+    
+        // Test importing only one name from SampleModule
+        include("SampleModule", "someFunction");
+        ok(defined("someFunction"),
+            "importing name injected the name into global namespace");
+        ok(!defined("anotherFunction"),
+            "importing name does not inject other public names");
+        
+        // Test importing a group from SampleModule
+        include("SampleModule", ":someGroup");
+        ok(defined("someFunction") && defined("anotherFunction"),
+            "importing group injects all group's names");
+        
+        // Test importing a nonexistent group from SampleModule
+        try {
+            include("SampleModule", ":nonexistentGroup");
+            fail("importing nonexistent group throws exception");
+        } catch(e) {
+            pass("importing nonexistent group throws exception");
+        }
+    
+        // Test importing all names from SampleModule
+        include("SampleModule", "*");
+        ok(defined("thirdFunction"),
+            "importing all names injects all names");
+    
+        // Test that importing doesn't reload a loaded module (or a simulacrum of it)
+        SampleModule.newMember = {};
+        include("SampleModule", "*");
+        ok(defined("SampleModule.newMember"),
+            "importing module doesn't replace existing module object");
+    
+        // Test including a nonexistent module
+        try {
+            include("NonexistentSampleModule");
+            fail("importing nonexistent module throws exception");
+        } catch(e) {
+            pass("importing nonexistent module throws exception");
+        }
+    
+        // Test that importing a submodule from a package works
+        include("SamplePackage.SubModule");
+        ok(!defined("SubModule") && defined("SamplePackage.SubModule"),
+            "importing module from package");    
+    
+        // Test importing a JSAN module
+        include("SampleJSANModule");
+        ok(defined("SampleJSANModule") && defined("SampleJSANModule.someAttribute")
+            && defined("SampleJSANModule.MEMBERS")
+            && SampleJSANModule.MEMBERS[0] == "someFunction"
+            && SampleJSANModule.MEMBERS[1] == "someAttribute"
+            && SampleJSANModule.MEMBERS[2] == "someNumber"
+            && defined("SampleJSANModule.MEMBERGROUPS")
+            && SampleJSANModule.MEMBERGROUPS["foo"][0] == "someNumber",
+            "importing JSAN-compatible module adapts it to JSModule");
+    
+      </script>
+    </pre>
+  </body>
+</html>

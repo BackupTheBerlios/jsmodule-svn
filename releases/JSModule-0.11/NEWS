@@ -1,0 +1,26 @@
+JSModule News
+=============
+
+Here you'll find a list of notable changes in each release of JSModule.
+
+JSModule 0.11, 20 Dec 2005
+--------------------------
+
+* Packaged JSModule for OpenJSAN_ .
+
+* Converted tests to use Test.Simple test harness.
+
+* Attempting to include a name or group name that's not in a module,
+  or attempting to include a module that cannot be found will throw
+  an exception.
+  
+* Fixed a bug where a non-Error exception thrown by a module while
+  loading was not passed on.
+
+..  _OpenJSAN: http://openjsan.org/
+
+JSModule 0.10, 30 Nov 2005
+---------------------------
+
+* Initial public release
+

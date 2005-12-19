@@ -1,0 +1,61 @@
+<html>
+  <head>
+    <script type="text/javascript" src="../src/JSModule.js"></script>
+    <script type="text/javascript" src="lib/Test/Builder.js"></script>
+    <script type="text/javascript" src="lib/Test/Simple.js"></script>
+  </head>
+  <body>
+    <pre id="test">
+      <script type="text/javascript">
+        var defined = function(name) {
+            // See if name is defined
+            try {
+                if(typeof(eval(name)) == "undefined")
+                    return false;
+            } catch(e) {
+                return false;
+            }
+            return true;
+        };
+
+        // Plan for the number of tests we have
+        plan({tests: 5});
+        
+        // Test the inject() function
+        var inject = JSModule.inject;
+    
+        // Test injection into a custom namespace
+        target = {};
+        inject({injectedName: "SOMEVALUE"}, target);
+        ok(defined("target.injectedName") && target.injectedName == "SOMEVALUE",
+            "injecting name into namespace object");
+    
+        // Test injecting into the global namespace
+        inject({injectedName: "SOMEVALUE"});
+        ok(defined("injectedName") && injectedName == "SOMEVALUE",
+            "injecting name into global namespace");
+    
+        // Test injecting overrides previous name
+        injectedName = "INDEPENDENTVALUE";
+        inject({injectedName: "SOMEVALUE"});
+        ok(injectedName == "SOMEVALUE",
+            "injecting overwrites preexisting name");
+    
+        // Test injecting a dotted name into an empty target
+        target = {};
+        inject({"first.second.third.fourth": "SOMEVALUE"}, target);
+        ok(defined("target.first.second.third.fourth")
+            && target.first.second.third.fourth == "SOMEVALUE",
+            "injecting dotted name");
+    
+        // Test injecting a dotted name into a partially filled target
+        target = {first: {second: null, yetAnother: "YETANOTHERVALUE"},
+            stillYetAnother: "STILLYETANOTHERVALUE"};
+        inject({"first.second.third.fourth": "SOMEVALUE"}, target);
+        ok(defined("target.first.yetAnother") && defined("target.stillYetAnother")
+            && defined("target.first.second.third.fourth"),
+            "injecting dotted name preserves existing hierarchy");
+      </script>
+    </pre>
+  </body>
+</html>
